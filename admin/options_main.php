@@ -29,6 +29,10 @@ if ($proceed) {
     options__show_main_section(lang('my_profile'),$optionlist);
 
     $optionlist=array();
+    $optionlist[]='<A HREF="sms_edit.php" class="option">'.oicon('envelope').lang('config_sms').'</A>';
+    options__show_main_section(lang('sms_notifications'), $optionlist);
+
+    $optionlist=array();
     if (check_allow('laboratory_edit')) $optionlist[]='<A HREF="lang_item_main.php?item=laboratory" class="option">'.oicon('map-marker').lang('laboratories').'</A>';
     if (check_allow('subjectpool_edit')) $optionlist[]='<A HREF="subpool_main.php" class="option">'.oicon('globe').lang('sub_subjectpools').'</A>';
     if (check_allow('experimenttype_edit')) $optionlist[]='<A HREF="experiment_type_main.php" class="option">'.oicon('newspaper-o').lang('experiment_types').'</A>';
