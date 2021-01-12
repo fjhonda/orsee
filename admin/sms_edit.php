@@ -16,6 +16,13 @@ if ($proceed){
     echo '   <TABLE class="or_formtable">';
     echo '
     <TR>
+        <TD colspan=2 align=center>
+            <INPUT class="button" type=submit name="change" value="'.lang('change').'">
+        </TD>
+    </TR>
+    <TR><TD colspan=2><hr></TD></TR>';
+    echo '
+    <TR>
         <TD>
             '.lang('enable_sms').'
         </TD>
@@ -61,19 +68,12 @@ if ($proceed){
         </TD>
     </TR>';
     echo '
+    <TR><TD colspan=2><hr></TD></TR>
     <TR>
         <TD colspan=2 align=center>
             <INPUT class="button" type=submit name="change" value="'.lang('change').'">
         </TD>
-    </TR>
-    <TR><TD colspan=2><hr></TD></TR>';
-    echo '
-    <TR>
-        <TD colspan=2 align=center>
-            <INPUT class="button" type=submit name="change" value="'.lang('change').'">
-        </TD>
-    </TR>
-    <TR><TD colspan=2><hr></TD></TR>';
+    </TR>';
 
     echo '</TABLE>';
 }
