@@ -1229,6 +1229,55 @@ $system__options_defaults[]=array(
 $system__options_defaults[]=array('type'=>'line');
 
 
+/////////////////////////////////
+///      SMS OPTIONS          ///
+/////////////////////////////////
+$system_options_sms=array();
+
+$system_options_sms[]=array(
+        'option_name'=>'enable_sms',
+        'option_text'=>'Enable SMS',
+        'type'=>'select_yesno_switchy',
+        'default_value'=>'n'
+);
+
+$system_options_sms[]=array(
+        'option_name'=>'sms_version',
+        'option_text'=>'AWS API version',
+        'type'=>'textline',
+        'default_value'=>'',
+        'size'=>'200',
+        'maxlength'=>'200',
+        );
+
+$system_options_sms[]=array(
+        'option_name'=>'sms_region',
+        'option_text'=>'AWS Region',
+        'type'=>'textline',
+        'default_value'=>'',
+        'size'=>'200',
+        'maxlength'=>'200',
+);
+
+$system_options_sms[]=array(
+        'option_name'=>'sms_aws_key_id',
+        'option_text'=>'AWS API key ID',
+        'type'=>'textline',
+        'default_value'=>'',
+        'size'=>'200',
+        'maxlength'=>'200',
+        );
+
+$system_options_sms[]=array(
+        'option_name'=>'sms_key_secret',
+        'option_text'=>'AWS secret key',
+        'type'=>'textline',
+        'default_value'=>'',
+        'size'=>'200',
+        'maxlength'=>'200',
+        );
+
+
 
 //////////////////////////////////
 // COLORS

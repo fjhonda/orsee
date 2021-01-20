@@ -5,6 +5,9 @@ $title="config_sms";
 $menu_area="options";
 include('header.php');
 
+if (isset($_REQUEST['change'])){
+    echo 'logre editar';
+}
 
 //Section of the page properly
 echo '<form action="sms_edit.php" method=post>';
