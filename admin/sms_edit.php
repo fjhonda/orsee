@@ -12,8 +12,6 @@ $sms_options=array();
 
 if ($proceed){
 
-    $opts=$system_options_sms;
-
     $pars=array(':type'=>'sms');
     $query="select * from ".table('options')."
         where option_type= :type
@@ -33,22 +31,29 @@ if (isset($_REQUEST['change'])){
     $pars_update=array();
     $now=time();
     //validate if the parameter exists
-    foreach ($opts as $o){
-        if (isset($sms_options[$o['option_name']])){
-            //is for update
-            $pars_update[]=array(':value'=>$_REQUEST[$o['option_name']],
-                                ':name'=>$o['option_name'],
+    if (count($sms_options)>0){
+        //we do the update procedure
+        $options_keys=array_keys($sms_options);
+        foreach ($options_keys as $o){
+            echo '<br/>Entre en parametros: '.$_POST[$o].'<br/>';
+            $pars_update[]=array(':value'=>$_REQUEST[$o],
+                                ':name'=>$o,
                                 ':type'=>'sms');
         }
-        else{
-            //is for insert
-            $pars_new[]=array(':value'=>$_REQUEST[$o['option_name']],
-                            ':name'=>$o['option_name'],
-                            ':type'=>'sms',
-                            ':now'=>$now);
+        echo '<br/> Parametros listos: <br/>'.print_r($pars_update);
+    }
+    else {
+        //we insert the options for the first time
+        $options_keys=array('sms_enable','sms_version','sms_region','sms_aws_key_id','sms_aws_key_secret');
+        foreach($options_keys as $o){
+            $pars_new[]=array(':value'=>$_REQUEST[$o],
+                                ':name'=>$o,
+                                ':type'=>'sms',
+                                ':now'=>$now);
             $now++;
         }
     }
+
 
     //we insert or update data
     if (count($pars_update)>0){
@@ -58,7 +63,6 @@ if (isset($_REQUEST['change'])){
                 WHERE option_name= :name
                 AND option_type= :type";
         try{
-            echo print_r($pars_update);
             $done=or_query($query, $pars_update);
         }
         catch(Exception $e){
@@ -66,7 +70,6 @@ if (isset($_REQUEST['change'])){
         }
     }
     if (count($pars_new)>0){
-        echo 'conteo insert';
         //we insert values
         $query="INSERT INTO ".table('options')." SET
                 option_id= :now,
@@ -75,18 +78,18 @@ if (isset($_REQUEST['change'])){
                 option_type= :type";
 
         $done=or_query($query, $pars_new);
-        echo $done;
     }
 
     message(lang('changes_saved'));
-    log_admin("options_edit","type:sms");
-    redirect('admin/sms_edit.php');
+    //log_admin("options_edit","type:sms");
+    //redirect('admin/sms_edit.php');
 }
 
 //Section of the page properly
 echo '<form action="sms_edit.php" method=post>';
 
 if ($proceed){
+
     if (check_allow('settings_edit')) echo '
     <FORM action="sms_edit.php" method=post>';
 
@@ -104,8 +107,8 @@ if ($proceed){
             '.lang('enable_sms').'
         </TD>
         <TD align=center>';
-            echo '<INPUT type="radio" name="sms_enable"> '. lang('sms_enabled');
-            echo '<INPUT type="radio" name="sms_enable"> '.lang('sms_disabled');
+            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']=='on'?'checked': '').'> '. lang('sms_enabled');
+            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']!='on'?'checked': '').'> '.lang('sms_disabled');
         echo '</TD>
     </TR>';
     echo '
@@ -114,7 +117,7 @@ if ($proceed){
             '.lang('sms_version').'
         </TD>
         <TD align=center>
-            <INPUT type="text" name="sms_version" size="20" maxlength="100" value="">
+            <INPUT type="text" name="sms_version" size="20" maxlength="100" value="'.$sms_options['sms_version'].'">
         </TD>
     </TR>';
     echo '
@@ -123,7 +126,7 @@ if ($proceed){
             '.lang('sms_region').'
         </TD>
         <TD align=center>
-            <INPUT type="text" name="sms_region" size="20" maxlength="100" value="">
+            <INPUT type="text" name="sms_region" size="20" maxlength="100" value="'.$sms_options['sms_region'].'">
         </TD>
     </TR>';
     echo '
@@ -132,7 +135,7 @@ if ($proceed){
             '.lang('sms_aws_key_id').'
         </TD>
         <TD align=center>
-            <INPUT type="text" name="sms_key_id" size="20" maxlength="100" value="">
+            <INPUT type="text" name="sms_aws_key_id" size="20" maxlength="100" value="'.$sms_options['sms_aws_key_id'].'">
         </TD>
     </TR>';
     echo '
@@ -141,7 +144,7 @@ if ($proceed){
             '.lang('sms_aws_key_secret').'
         </TD>
         <TD align=center>
-            <INPUT type="text" name="sms_key_secret" size="20" maxlength="100" value="">
+            <INPUT type="text" name="sms_aws_key_secret" size="20" maxlength="100" value="'.$sms_options['sms_aws_key_secret'].'">
         </TD>
     </TR>';
     echo '
