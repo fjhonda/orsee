@@ -35,12 +35,10 @@ if (isset($_REQUEST['change'])){
         //we do the update procedure
         $options_keys=array_keys($sms_options);
         foreach ($options_keys as $o){
-            echo '<br/>Entre en parametros: '.$_POST[$o].'<br/>';
             $pars_update[]=array(':value'=>$_REQUEST[$o],
                                 ':name'=>$o,
                                 ':type'=>'sms');
         }
-        echo '<br/> Parametros listos: <br/>'.print_r($pars_update);
     }
     else {
         //we insert the options for the first time
@@ -82,7 +80,7 @@ if (isset($_REQUEST['change'])){
 
     message(lang('changes_saved'));
     //log_admin("options_edit","type:sms");
-    //redirect('admin/sms_edit.php');
+    redirect('admin/sms_edit.php');
 }
 
 //Section of the page properly
@@ -90,10 +88,8 @@ echo '<form action="sms_edit.php" method=post>';
 
 if ($proceed){
 
-    if (check_allow('settings_edit')) echo '
-    <FORM action="sms_edit.php" method=post>';
 
-    echo '   <TABLE class="or_formtable">';
+    echo '   <TABLE class="or_formtable" style="margin: 0 auto;">';
     echo '
     <TR>
         <TD colspan=2 align=center>
@@ -107,8 +103,8 @@ if ($proceed){
             '.lang('enable_sms').'
         </TD>
         <TD align=center>';
-            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']=='on'?'checked': '').'> '. lang('sms_enabled');
-            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']!='on'?'checked': '').'> '.lang('sms_disabled');
+            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']=='on'?'checked': '').' value="on"> '. lang('sms_enabled');
+            echo '<INPUT type="radio" name="sms_enable" '.($sms_options['sms_enable']!='on'?'checked': '').' value="off"> '.lang('sms_disabled');
         echo '</TD>
     </TR>';
     echo '
