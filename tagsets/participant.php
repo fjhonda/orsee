@@ -286,6 +286,11 @@ function participantform__check_fields($edit,$admin) {
     foreach ($formfields as $f) {
     if($f['subpools']=='all' | in_array($subpool['subpool_id'],explode(",",$f['subpools']))) {
         if ($admin || $f['admin_only']!='y') {
+
+            //if is the special subpool and is the email field, we skip the validation
+            if ($subpool['subpool_id']=='4' && $f['mysql_column_name']='email')
+                continue;//we skip the validation of this field
+
             if ($f['compulsory']=='y') {
                 if(!isset($edit[$f['mysql_column_name']]) || !$edit[$f['mysql_column_name']]) {
                     $errors_dataform[]=$f['mysql_column_name'];

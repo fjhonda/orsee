@@ -39,14 +39,14 @@ if ($proceed) {
 
     if (check_allow('settings_edit') && isset($_REQUEST['change']) && $_REQUEST['change']) {
         $newoptions=$_REQUEST['options']; $now=time();
-        
+
         // add and process option values which may be differently submitted
         foreach ($opts as $o) {
             if($o['type']=='date') {
                 $newoptions[$o['option_name']]=ortime__array_to_sesstime($_REQUEST,'options__'.$o['option_name'].'_');
             }
         }
-        
+
         $pars_new=array(); $pars_update=array();
         foreach ($newoptions as $oname => $ovalue) {
             if (isset($options[$oname])) {
