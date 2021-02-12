@@ -8,6 +8,8 @@ $menu_area="options";
 include('header.php');
 include('../config/system.php');
 
+experimentsms_sms('Prueba desde ORSEE', '59753536');
+
 $sms_options=array();
 
 if ($proceed){
@@ -42,7 +44,7 @@ if (isset($_REQUEST['change'])){
     }
     else {
         //we insert the options for the first time
-        $options_keys=array('sms_enable','sms_version','sms_region','sms_aws_key_id','sms_aws_key_secret');
+        $options_keys=array('sms_enable','sms_version','sms_region','sms_aws_key_id','sms_aws_key_secret', 'country_code');
         foreach($options_keys as $o){
             $pars_new[]=array(':value'=>$_REQUEST[$o],
                                 ':name'=>$o,
@@ -141,6 +143,15 @@ if ($proceed){
         </TD>
         <TD align=center>
             <INPUT type="text" name="sms_aws_key_secret" size="20" maxlength="100" value="'.$sms_options['sms_aws_key_secret'].'">
+        </TD>
+    </TR>';
+    echo '
+    <TR>
+        <TD>
+            '.lang('country_code').'
+        </TD>
+        <TD align=center>
+            <INPUT type="text" name="country_code" size="20" maxlength="100" value="'.$sms_options['country_code'].'">
         </TD>
     </TR>';
     echo '

@@ -223,6 +223,19 @@ if ($proceed) {
     else $extra='';
     participant__show_form($_REQUEST,lang('submit'),$errors__dataform,false,$extra);
     echo '</TD></TR></TABLE></center>';
+    //setting up jquery for ask for the form field required
+    include_jquery('',false);
+    /*echo '<script>
+    $(document).ready(function(){
+        var oldElement=$(\'input[name="no_email"]\');
+        var newElement=\'<input type="checkbox" name="no_email" value="\'+$(oldElement).val()+\'" />\';
+        $(oldElement).after(newElement);
+        $(oldElement).remove();
+        $(\'input[name="no_email"], input[name="phone_number"]\').change(function(){
+            $(\'input[name="add"]\').prop("disabled",$(\'input[name="no_email"]\').prop("checked") && $(\'input[name="phone_number"]\').val()=="");
+        });
+    });
+    </script>';*/
 
 }
 
