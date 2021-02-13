@@ -188,11 +188,12 @@ if ($proceed) {
             if (!isset($participant['language']) || !$participant['language']) $participant['language']=$settings['public_standard_language'];
             $done=orsee_db_save_array($participant,"participants",$participant['participant_id'],"participant_id");
             if ($done) {
+                echo print_r($participant);
                 log__participant("subscribe",$participant['lname'].', '.$participant['fname']);
                 $proceed=false;
                 $done=experimentmail__confirmation_mail($participant);
                 message(lang('successfully_registered'));
-                redirect ("public/");
+                //redirect ("public/");
             } else {
                 message(lang('database_error'));
             }
@@ -225,7 +226,7 @@ if ($proceed) {
     echo '</TD></TR></TABLE></center>';
     //setting up jquery for ask for the form field required
     include_jquery('',false);
-    /*echo '<script>
+    echo '<script>
     $(document).ready(function(){
         var oldElement=$(\'input[name="no_email"]\');
         var newElement=\'<input type="checkbox" name="no_email" value="\'+$(oldElement).val()+\'" />\';
@@ -235,7 +236,7 @@ if ($proceed) {
             $(\'input[name="add"]\').prop("disabled",$(\'input[name="no_email"]\').prop("checked") && $(\'input[name="phone_number"]\').val()=="");
         });
     });
-    </script>';*/
+    </script>';
 
 }
 

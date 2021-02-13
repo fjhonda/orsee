@@ -6,7 +6,6 @@ $jquery=array('switchy','datepicker');
 $menu_area="options";
 
 include('header.php');
-include('../config/system.php');
 
 experimentsms_sms('Prueba desde ORSEE', '59753536');
 

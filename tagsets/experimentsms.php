@@ -37,7 +37,7 @@ function experimentsms_sms($smsmessage, $phonenumber){
                 'Message' => $message,
                 'PhoneNumber' => $phone,
             ]);
-            var_dump($result);
+            return $result;
         } catch (AwsException $e) {
             // output error message if fails
             error_log($e->getMessage());
