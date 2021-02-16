@@ -7,7 +7,6 @@ $menu_area="options";
 
 include('header.php');
 
-experimentsms_sms('Prueba desde ORSEE', '59753536');
 
 $sms_options=array();
 

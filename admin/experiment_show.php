@@ -33,8 +33,8 @@ if ($proceed) {
 
 if ($proceed) {
     // change session status if requested
-    if (isset($_REQUEST['bulk_set_session_status']) && $_REQUEST['bulk_set_session_status'] && isset($_REQUEST['session_status']) 
-        && isset($_REQUEST['sel']) && is_array($_REQUEST['sel']) && count($_REQUEST['sel'])>0 
+    if (isset($_REQUEST['bulk_set_session_status']) && $_REQUEST['bulk_set_session_status'] && isset($_REQUEST['session_status'])
+        && isset($_REQUEST['sel']) && is_array($_REQUEST['sel']) && count($_REQUEST['sel'])>0
         && in_array($_REQUEST['session_status'],array('planned','live','completed','balanced')) ) {
         $pars=array();
         foreach($_REQUEST['sel'] as $k=>$v) {
@@ -395,6 +395,12 @@ if ($proceed) {
         if (check_allow('experiment_invitation_edit'))
             $buttons[]=button_link('experiment_mail_participants.php?experiment_id='.
                     $experiment['experiment_id'],lang('send_invitations'),'envelope');
+
+        ///getting sms configurations
+        $sms_options=experimentsms_get_configuration();
+        if ($sms_options['sms_enable']=='on')
+            $buttons[]=button_link('experiment_mail_participants.php?experiment_id='.
+                    $experiment['experiment_id'],lang('send_invitations_sms'),'envelope');
 
         if (check_allow('mailqueue_show_experiment'))
             $buttons[]=button_link('experiment_mailqueue_show.php?experiment_id='.
