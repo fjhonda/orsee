@@ -192,12 +192,12 @@ if ($proceed) {
                 $proceed=false;
                 try{
                     $done= $participant['no_email']=='' ? experimentmail__confirmation_mail($participant) : experimentsms_confirmation_sms($participant);
+                    message(lang('successfully_registered'));
+                    redirect ("public/");
                 }
                 catch(Exception $e){
                     error_log($e->getMessage(),0);
                 }
-                message(lang('successfully_registered'));
-                redirect ("public/");
             } else {
                 message(lang('database_error'));
             }

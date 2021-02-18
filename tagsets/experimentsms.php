@@ -18,6 +18,21 @@ function experimentsms_get_configuration(){
     return $sms_options;
 }
 
+function experimentsms_sms_topics(){
+
+    $sms_options=experimentsms_get_configuration();
+
+    $SnSclient = new SnSclient([
+        'version'     => $sms_options['sms_version'],
+        'region'      => $sms_options['sms_region'],
+        'credentials' => [
+            'key'    => $sms_options['sms_aws_key_id'],
+            'secret' => $sms_options['sms_aws_key_secret'],
+        ],
+    ]);
+    return $SnSclient->listTopics();
+}
+
 function experimentsms_sms($smsmessage, $phonenumber){
     ///sent sms throught amazon sns service
 
@@ -46,7 +61,7 @@ function experimentsms_sms($smsmessage, $phonenumber){
             return $result;
         } catch (AwsException $e) {
             // output error message if fails
-            error_log($e->getMessage());
+            error_log($e->getMessage(),0);
         }
     }
 
