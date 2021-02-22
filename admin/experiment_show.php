@@ -399,7 +399,7 @@ if ($proceed) {
         ///getting sms configurations
         $sms_options=experimentsms_get_configuration();
         if ($sms_options['sms_enable']=='on')
-            $buttons[]=button_link('experiment_mail_participants.php?experiment_id='.
+            $buttons[]=button_link('experiment_sms_participants.php?experiment_id='.
                     $experiment['experiment_id'],lang('send_invitations_sms'),'envelope');
 
         if (check_allow('mailqueue_show_experiment'))

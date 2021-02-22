@@ -35,5 +35,6 @@ require "stats.php";
 require "payments.php";
 require "email.php";
 require "experimentsms.php";
+require "smsqueue.php"
 
 ?>

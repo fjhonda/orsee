@@ -34,7 +34,6 @@ if ($proceed) {
     $inv_langs=lang__get_part_langs();
     $installed_langs=get_languages();
 
-
     echo '<center>';
     echo '<TABLE class="or_page_subtitle" style="background: '.$color['page_subtitle_background'].'; color: '.$color['page_subtitle_textcolor'].'; width: 80%;">
             <TR><TD align="center">
@@ -46,7 +45,7 @@ if ($proceed) {
     if ($action) {
 
         $sitem=$_REQUEST;
-        $sitem['content_type']='experiment_invitation_mail';
+        $sitem['content_type']='experiment_invitation_sms';
         $sitem['content_name']=$experiment_id;
 
         // prepare lang stuff
@@ -67,7 +66,7 @@ if ($proceed) {
         else message (lang('database_error'));
 
         if ($preview) {
-            redirect ('admin/experiment_mail_preview.php?experiment_id='.$experiment_id);
+            redirect ('admin/experiment_sms_preview.php?experiment_id='.$experiment_id);
         } elseif ($send || $sendall) {
             // send mails!
 
@@ -76,7 +75,7 @@ if ($proceed) {
             if ($allow) {
                 $whom= ($sendall) ? "all" : "not-invited";
                 $measure_start=getmicrotime();
-                $sent=experimentmail__send_invitations_to_queue($experiment_id,$whom);
+                $sent=experimentsms__send_invitations_to_queue($experiment_id,$whom);
                 message ($sent.' '.lang('xxx_inv_mails_added_to_mail_queue'));
                 $measure_end=getmicrotime();
                 message(lang('time_needed_in_seconds').': '.round(($measure_end-$measure_start),5));
@@ -95,7 +94,7 @@ if ($proceed) {
 if ($proceed) {
     $pars=array(':experiment_id'=>$experiment_id);
     $query="SELECT * from ".table('lang')."
-            WHERE content_type='experiment_invitation_mail'
+            WHERE content_type='experiment_invitation_sms'
             AND content_name= :experiment_id";
     $experiment_mail=orsee_query($query,$pars);
 
@@ -123,7 +122,7 @@ if ($proceed) {
         }
 
         if (!$body) {
-            $body=load_mail('default_invitation_'.$experiment['experiment_type'],$inv_lang);
+            $body=load_sms('default_invitation_'.$experiment['experiment_type'],$inv_lang);
         }
 
         if (count($inv_langs) > 1) {
@@ -137,7 +136,7 @@ if ($proceed) {
         }
 
         echo '
-            <TR>
+            <TR style="display:none;">
                 <TD>
                     '.lang('subject').':
                 </TD>
@@ -149,7 +148,7 @@ if ($proceed) {
                     <TR>
                 <TD valign=top colspan=2>
                     '.lang('body_of_message').':<BR>
-                    <FONT class="small">'.lang('experimentmail_how_to_rebuild_default').'</FONT>
+                    <FONT class="small">'.lang('experimentsms_how_to_rebuild_default').'</FONT>
                     <BR>
 
                     <center>
@@ -170,7 +169,7 @@ if ($proceed) {
                     1. '.lang('save_mail_text_only').'
                 </TD></TR>
                 <TR class="empty"><TD align="left">
-                    <INPUT class="button" type=submit name="preview" class="small" value="'.lang('mail_preview').'">
+                    <INPUT class="button" type=submit name="preview" class="small" value="'.lang('sms_preview').'">
                 </TD><TD align="right">
                     <INPUT class="button" type=submit name="save" value="'.lang('save').'">
                 </TD></TR>
@@ -185,13 +184,13 @@ if ($proceed) {
                     <TD>'.lang('registered_subjects').': '.experiment__count_participate_at($experiment_id,"","session_id != :session_id",array(':session_id'=>0)).'</TD>
                     </TR>
                     <TR class="empty">
-                    <TD colspan=3>'.lang('inv_mails_in_mail_queue').': ';
-                    $qmails=experimentmail__mails_in_queue("invitation",$experiment_id);
+                    <TD colspan=3>'.lang('inv_sms_in_sms_queue').': ';
+                    $qmails=experimentsms__sms_in_queue("invitation",$experiment_id);
                     echo $qmails;
 
         if (check_allow('mailqueue_show_experiment')) {
-                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.button_link('experiment_mailqueue_show.php?experiment_id='.
-                        $experiment['experiment_id'],lang('monitor_experiment_mail_queue'),'envelope-square');
+                echo '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'.button_link('experiment_smsqueue_show.php?experiment_id='.
+                        $experiment['experiment_id'],lang('monitor_experiment_sms_queue'),'envelope-square');
         }
             echo '</TD></TR></TABLE>
                 </TD>
