@@ -202,7 +202,7 @@ if ($proceed) {
                     <TD colspan=2>
                         <TABLE class="or_option_buttons_box" style="background: '.$color['options_box_background'].';">
                             <TR><TD align="left" style="color: '.$color['important_note_textcolor'].';">
-                                '.$qmails.' '.lang('xxx_inv_mails_for_this_exp_still_in_queue').'
+                                '.$qmails.' '.lang('xxx_inv_sms_for_this_exp_still_in_queue').'
                             </TD></TR>
                         </TABLE>
                     </TD>
