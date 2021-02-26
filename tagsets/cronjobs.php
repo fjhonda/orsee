@@ -27,6 +27,7 @@ function cron__run_cronjobs() {
             'check_for_session_reminders',
             'apply_permanent_queries',
             'process_mail_queue',
+            'process_sms_queue',
             'retrieve_emails',
             'update_participants_history',
             'check_for_noshow_warnings',
@@ -172,6 +173,16 @@ function cron__process_mail_queue() {
     global $settings;
 
     $result=experimentmail__send_mails_from_queue($settings['mail_queue_number_send_per_time']);
+    $target="mails_sent:".$result['mails_sent'];
+    if ($result['mails_errors']>0) $target.=", mail_errors:".$result['mails_errors'];
+    if ($result['mails_invmails_not_sent']>0) $target.=", invmail_not_sent_empty_sesslist:".$result['mails_invmails_not_sent'];
+    return $target;
+}
+
+function cron__process_sms_queue() {
+    global $settings;
+
+    $result=experimentsms__send_sms_from_queue($settings['mail_queue_number_send_per_time']);
     $target="mails_sent:".$result['mails_sent'];
     if ($result['mails_errors']>0) $target.=", mail_errors:".$result['mails_errors'];
     if ($result['mails_invmails_not_sent']>0) $target.=", invmail_not_sent_empty_sesslist:".$result['mails_invmails_not_sent'];
