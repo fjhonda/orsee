@@ -80,7 +80,7 @@ if ($proceed) {
                 $measure_end=getmicrotime();
                 message(lang('time_needed_in_seconds').': '.round(($measure_end-$measure_start),5));
                 log__admin("experiment_send_invitations","experiment:".$experiment['experiment_name']);
-                redirect ("admin/experiment_mail_participants.php?experiment_id=".$experiment_id);
+                redirect ("admin/experiment_sms_participants.php?experiment_id=".$experiment_id);
             }
 
         } else {
@@ -166,7 +166,7 @@ if ($proceed) {
             <TR><TD colspan=2>
                 <TABLE class="or_option_buttons_box" style="background: '.$color['options_box_background'].';">
                 <TR><TD colspan="2" align="left">
-                    1. '.lang('save_mail_text_only').'
+                    1. '.lang('save_sms_text_only').'
                 </TD></TR>
                 <TR class="empty"><TD align="left">
                     <INPUT class="button" type=submit name="preview" class="small" value="'.lang('sms_preview').'">
@@ -211,7 +211,7 @@ if ($proceed) {
                     echo '  <TR><TD colspan=2>
                     <TABLE class="or_option_buttons_box" style="background: '.$color['options_box_background'].';">
                     <TR><TD align="left">
-                                2. '.lang('mail_to_not_got_one').'
+                                2. '.lang('sms_to_not_got_one').'
                     </TD></TR>
                     <TR><TD align="right">
                         <INPUT class="button" type=submit name="send" value="'.lang('send').'">
@@ -221,7 +221,7 @@ if ($proceed) {
                     <TR><TD colspan=2>
                     <TABLE class="or_option_buttons_box" style="background: '.$color['options_box_background'].';">
                     <TR><TD align="left">
-                                3. '.lang('mail_have_got_it_already').'
+                                3. '.lang('sms_have_got_it_already').'
                     </TD></TR>
                     <TR class="empty"><TD align="right">
                         <INPUT class="button" type=submit name="sendall" value="'.lang('send_to_all').'">
