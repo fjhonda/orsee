@@ -239,6 +239,16 @@ if ($proceed) {
         $(\'input[name="no_email"], input[name="phone_number"]\').change(function(){
             $(\'input[name="add"]\').prop("disabled",$(\'input[name="no_email"]\').prop("checked") && $(\'input[name="phone_number"]\').val()=="");
             $(\'input[name="email"]\').prop("disabled",$(\'input[name="no_email"]\').prop("checked"));
+
+            if ($(\'input[name="phone_number"]\').val()==""){
+                $(\'input[name="phone_number"]\').css(\'background\',\'#e05353\');
+                $(\'input[name="phone_number"]\').after(\'<span style="color:#e05353;" class="phoneEmpty"> *'.lang('phone_required').'</span>\');
+            }
+            else{
+                $(\'input[name="phone_number"]\').css(\'background\',\'\');
+                $(\'.phoneEmpty\').remove();
+            }
+
         });
     });
     </script>';

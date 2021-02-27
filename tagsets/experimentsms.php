@@ -33,7 +33,7 @@ function experimentsms_sms_topics(){
     return $SnSclient->listTopics();
 }
 
-function experimentsms_sms($smsmessage, $phonenumber){
+function experimentsms_sms_test($smsmessage, $phonenumber){
     ///sent sms throught amazon sns service
 
     $sms_options=experimentsms_get_configuration();
@@ -52,8 +52,6 @@ function experimentsms_sms($smsmessage, $phonenumber){
 
         $message = $smsmessage;
         $phone = '+'.$sms_options['country_code'].$phonenumber;
-error_log('Llegue a mensaje: '.$phone,0);
-error_log('Mensaje: '.$message,0);
         try {
             $result = $SnSclient->publish([
                 'Message' => $message,
@@ -69,7 +67,7 @@ error_log('Mensaje: '.$message,0);
 
 }
 
-function experimentsms_sms_test($smsmessage, $phonenumber){
+function experimentsms_sms($smsmessage, $phonenumber){
     ///write in log a test of sending a message for reduce sms costs
 
     $sms_options=experimentsms_get_configuration();
@@ -90,8 +88,8 @@ function experimentsms_sms_test($smsmessage, $phonenumber){
         $phone = '+'.$sms_options['country_code'].$phonenumber;
 
         try {
-            error_log('Test mensaje texto',0);
-            error_log('Message sent: '.$message.' - Destination: '. $phonenumber. ' Time:'. date("Y-m-d H:i:s"), 0);
+            $txt="Test mensaje de texto. Message sent: ".$message.' - Destination: '. $phonenumber. ' Time:'. date("Y-m-d H:i:s");
+            file_put_contents('/home/francis/logs.txt', $txt.PHP_EOL , FILE_APPEND | LOCK_EX);
             return true;
         } catch (AwsException $e) {
             // output error message if fails
@@ -106,7 +104,7 @@ function experimentsms_confirmation_sms($participant){
     global $settings__root_url, $settings;
     ///sent message for confirmation sms
     $message='Buen día, por favor confirmar su cuenta para recibir invitaciones a experimentos en el siguiente enlace: '.$settings__root_url."/public/participant_confirm.php?c=".urlencode($participant['confirmation_token']);
-    experimentsms_sms_test($message, $participant['phone_number']);
+    experimentsms_sms($message, $participant['phone_number']);
 }
 
 function experimentsms__send_invitations_to_queue($experiment_id,$whom="not-invited") {
@@ -124,6 +122,7 @@ function experimentsms__send_invitations_to_queue($experiment_id,$whom="not-invi
             SELECT ".$now.",'invitation', ".table('participants').".participant_id, experiment_id
             FROM ".table('participants').", ".table('participate_at')."
             WHERE experiment_id= :experiment_id
+            AND ".table('participants').".no_email<>''
             AND ".table('participants').".participant_id=".table('participate_at').".participant_id ".
             $aquery."
             AND session_id = '0' AND pstatus_id = '0'";
