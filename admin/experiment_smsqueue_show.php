@@ -3,7 +3,7 @@
 ob_start();
 
 $jquery=array('popup');
-$title="mailqueue";
+$title="smsqueue";
 $menu__area="statistics";
 include ("header.php");
 if ($proceed) {

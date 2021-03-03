@@ -186,11 +186,14 @@ function experimentmail__send_invitations_to_queue($experiment_id,$whom="not-inv
             SELECT ".$now.",'invitation', ".table('participants').".participant_id, experiment_id
             FROM ".table('participants').", ".table('participate_at')."
             WHERE experiment_id= :experiment_id
+            and ".table('participants').".email<>''
+            and ".table('participants').".email is not null
             AND ".table('participants').".participant_id=".table('participate_at').".participant_id ".
             $aquery."
             AND session_id = '0' AND pstatus_id = '0'";
     if ($status_query) $query.=" AND ".$status_query;
     $query.=" ".$order;
+    error_log($query, 0);
     $done=or_query($query,$pars);
     $count=pdo_num_rows($done);
     return $count;

@@ -171,8 +171,8 @@ if ($proceed) {
         <TR style="background: '.$color['list_header_background'].'; color: '.$color['list_header_textcolor'].';">
         <TD>'.lang('id').'</TD>
         <TD>'.lang('date_and_time').'</TD>
-        <TD>'.lang('email_type').'</TD>
-        <TD>'.lang('email_recipient').'</TD>
+        <TD>'.lang('sms_type').'</TD>
+        <TD>'.lang('sms_recipient').'</TD>
         <TD>'.lang('reference').'</TD>
         <TD>'.lang('error').'</TD>';
     if (check_allow('mailqueue_edit_all')) {
@@ -202,7 +202,7 @@ if ($proceed) {
 
     $shade=false; $ids=array(); $experiment_ids=array(); $entries=array();
     while ($line=pdo_fetch_assoc($result)) {
-        $ids[]=$line['mail_id'];
+        $ids[]=$line['sms_id'];
         if ($line['experiment_id']) $experiment_ids[]=$line['experiment_id'];
         $entries[]=$line;
     }
@@ -218,7 +218,7 @@ if ($proceed) {
             <TD>'.ortime__format($line['timestamp'],'hide_second:false',lang('lang')).'</TD>
             <TD>'.$line['sms_type'].'</TD>
             <TD>'.$line['sms_recipient'];
-        if (check_allow('participants_edit')) echo ' <FONT class="small">'.javascript__edit_popup_link($line['mail_recipient']).'</FONT>';
+        if (check_allow('participants_edit')) echo ' <FONT class="small">'.javascript__edit_popup_link($line['sms_recipient']).'</FONT>';
         echo '</TD>
             <TD>';
         $reference=array();
@@ -229,7 +229,7 @@ if ($proceed) {
         echo '</TD>
             <TD>'.$line['error'].'</TD>';
         if (check_allow('mailqueue_edit_all')) {
-            echo '<TD><INPUT type="checkbox" name="del['.$line['mail_id'].']" value="y"></TD';
+            echo '<TD><INPUT type="checkbox" name="del['.$line['sms_id'].']" value="y"></TD';
         }
         echo '</TR>';
     }

@@ -33,7 +33,7 @@ function experimentsms_sms_topics(){
     return $SnSclient->listTopics();
 }
 
-function experimentsms_sms_test($smsmessage, $phonenumber){
+function experimentsms_sms($smsmessage, $phonenumber){
     ///sent sms throught amazon sns service
 
     $sms_options=experimentsms_get_configuration();
@@ -67,7 +67,7 @@ function experimentsms_sms_test($smsmessage, $phonenumber){
 
 }
 
-function experimentsms_sms($smsmessage, $phonenumber){
+function experimentsms_sms_test($smsmessage, $phonenumber){
     ///write in log a test of sending a message for reduce sms costs
 
     $sms_options=experimentsms_get_configuration();
@@ -468,15 +468,32 @@ function experimentsms__delete_from_queue($sms_id) {
 
     function experimentsms__get_invitation_sms_details($part,$exp,$slist) {
         global $settings;
+        $finalLink=experimentsms__build_lab_registration_link($part);
         $part['edit_link']='';//experimentmail__build_edit_link($part);
-        $part['enrolment_link']=experimentsms__build_lab_registration_link($part);
+        $part['enrolment_link']=$finalLink;//experimentsms__build_lab_registration_link($part);
         $part['experiment_name']=$exp['experiment_public_name'];
         $part['sessionlist']=$slist;
-        $part['link']=experimentsms__build_lab_registration_link($part);
+        $part['link']=$finalLink;//experimentsms__build_lab_registration_link($part);
         $part['public_experiment_note']=$exp['public_experiment_note'];
         $part['ethics_by']=$exp['ethics_by'];
         $part['ethics_number']=$exp['ethics_number'];
         return $part;
+    }
+
+    function experimentsms__urlShortener($fullUrl, $participantID){
+        $url = urlencode($fullUrl);
+        $json = file_get_contents("https://cutt.ly/api/api.php?key=3c4a4686902bdaa4f82a21a584666d3ce7bb5&short=$url&name=".$participantID);
+        $data = json_decode ($json, true);
+        if ($data['url']['status']==7)
+        {
+            return $data['url']['shortLink'];
+        }
+        else if ($data['url']['status']==3){
+            return 'https://cutt.ly/'.$participantID;
+        }
+        else {
+            return $fullUrl;
+        }
     }
 
 
@@ -485,6 +502,7 @@ function experimentsms__delete_from_queue($sms_id) {
         if (isset($settings['subject_authentication']) && $settings['subject_authentication']=='username_password') $token_string='';
         else $token_string="?p=".urlencode($participant['participant_id_crypt']);
         $reg_link=$settings__root_url."/public/participant_show.php".$token_string;
+        $reg_link=experimentsms__urlShortener($reg_link, $participant['participant_id_crypt']);
         return $reg_link;
     }
 
