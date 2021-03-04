@@ -1,5 +1,6 @@
 <?php
 // part of orsee. see orsee.org
+chdir( __DIR__ );
 
 include ("../config/settings.php");
 include ("../config/system.php");

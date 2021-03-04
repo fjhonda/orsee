@@ -103,7 +103,9 @@ function experimentsms_sms_test($smsmessage, $phonenumber){
 function experimentsms_confirmation_sms($participant){
     global $settings__root_url, $settings;
     ///sent message for confirmation sms
-    $message='Buen día, por favor confirmar su cuenta para recibir invitaciones a experimentos en el siguiente enlace: '.$settings__root_url."/public/participant_confirm.php?c=".urlencode($participant['confirmation_token']);
+    //$link= experimentsms__urlShortener($settings__root_url."/public/participant_confirm.php?c=".urlencode($participant['confirmation_token']), $participant['confirmation_token']);
+    $link= $settings__root_url."/public/participant_confirm.php?c=".urlencode($participant['confirmation_token']);
+    $message=lang('sms_account_confirmation').$link;
     experimentsms_sms($message, $participant['phone_number']);
 }
 

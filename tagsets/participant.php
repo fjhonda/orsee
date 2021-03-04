@@ -288,7 +288,7 @@ function participantform__check_fields($edit,$admin) {
         if ($admin || $f['admin_only']!='y') {
 
             //if is the special subpool and is the email field, we skip the validation
-            if ($subpool['subpool_id']=='4' && $f['mysql_column_name']='email')
+            if ($subpool['subpool_id']=='7' && $f['mysql_column_name']='email')
                 continue;//we skip the validation of this field
 
             if ($f['compulsory']=='y') {
