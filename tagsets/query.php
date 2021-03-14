@@ -147,12 +147,23 @@ function query__echo_form_javascript($prototypes,$load_query="") {
             );
         }
         echo "<script type='text/javascript'>var Ptypes = ";
-        echo json_encode($tmp);
+        echo json_encode(utf8ize($tmp));
         echo ";
             buildDropdown();
             ";
         echo "</script>";
 
+}
+
+function utf8ize( $mixed ) {
+    if (is_array($mixed)) {
+        foreach ($mixed as $key => $value) {
+            $mixed[$key] = utf8ize($value);
+        }
+    } elseif (is_string($mixed)) {
+        return mb_convert_encoding($mixed, "UTF-8", "UTF-8");
+    }
+    return $mixed;
 }
 
 function query__strip_ws_subqueries_recursively($subqueries) {

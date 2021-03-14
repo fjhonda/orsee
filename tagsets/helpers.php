@@ -22,7 +22,7 @@ function multi_array_sort(&$data, $sortby) {
         if (isset($sortby[2])) $sorting_var3 = $sortby[2];
     } else {
         $sorting_var1 = $sortby;
-    } 
+    }
     uasort($data,function ($a,$b) use ($sorting_var1, $sorting_var2, $sorting_var3) {
         if ($a[$sorting_var1]!=$b[$sorting_var1] || (!$sorting_var2)) {
             return $a[$sorting_var1]>$b[$sorting_var1];
@@ -311,6 +311,7 @@ function property_array_to_db_string($property_array) {
 
 function db_string_to_property_array($db_string) {
     $property_array=array();
+    $db_string=mb_convert_encoding($db_string, 'UTF-8', 'UTF-8');
     if ($db_string) {
         $db_string_array=explode("+=+",$db_string);
         foreach ($db_string_array as $line) {

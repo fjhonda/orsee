@@ -6,6 +6,7 @@ $menu__area="participants";
 $title="edit_participants";
 $jquery=array('arraypicker','textext','dropit','queryform','datepicker','popup');
 include ("header.php");
+
 if ($proceed) {
     $allow=check_allow('participants_show','participants_main.php');
 }
@@ -166,7 +167,7 @@ if ($proceed) {
                             $thispar[$field_name]=$anon_field['item_details']['field_value'];
                         }
                         if ($new_status>-1) $thispar['status_id']=$new_status;
-                        
+
                         $pars[]=$thispar;
                         $target="participant_id: ".$pid;
                         if ($new_status>-1) $target.=", new_status: ".$new_status;
