@@ -12,6 +12,13 @@ if ($proceed) {
 if ($proceed) {
     if (isset($_REQUEST['deleteall']) && $_REQUEST['deleteall']) $dall=true; else $dall=false;
     if (isset($_REQUEST['deletesel']) && $_REQUEST['deletesel']) $dsel=true; else $dsel=false;
+    if (isset($_REQUEST['sendreconfirmation']) && $_REQUEST['sendreconfirmation'] && isset($_SESSION['plist_ids'])) $reconfirmation_mail=true; else $reconfirmation_mail=false;
+
+    if ($reconfirmation_mail){
+        $mails_sent=experimentmail__send_reconfirmations_to_queue($_SESSION['plist_ids']);
+        message ($mails_sent.' '.lang('reconfirmation_mails_sent'));
+        redirect ("admin/participants_unconfirmed.php");
+    }
 
     if ( $dall || $dsel ) {
 
@@ -82,13 +89,15 @@ if ($proceed) {
         </TD></TR>
         <TR><TD colspan="2">';
 
-    $emails=query_show_query_result($query,"participants_unconfirmed",false);
+    $pids=query_show_query_result($query,"participants_unconfirmed",false);
+
+    $_SESSION['plist_ids']=$pids;
 
     echo '</FORM>';
     echo '</TD></TR></TABLE>';
 
-    $emailstring=implode(",",$emails);
-        echo '<BR><BR>'.button_link('mailto:'.$settings['support_mail'].'?bcc='.$emailstring,lang('write_message_to_all_listed'),'envelope');
+    //$emailstring=implode(",",$emails);
+        echo '<BR><BR><input class="button" type="submit" name="sendreconfirmation" value="'.lang('write_message_to_all_listed').'" />';
     echo '<BR><BR>'.button_link('participants_main.php',lang('back'),'level-up').'<BR><BR>';
 
     echo '</CENTER>';

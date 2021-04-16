@@ -171,6 +171,19 @@ function experimentmail__get_session_list($experiment_id,$tlang="") {
     return $list;
 }
 
+function experimentmail__send_reconfirmations_to_queue($participantIds){
+    $reconfirmations_sent=0;
+    foreach($participantIds as $participant_id){
+        $now=time();
+        $query="INSERT INTO ".table('mail_queue')." (timestamp,mail_type,mail_recipient)
+            values (".$now.", 'reconfirmation',".$participant_id.")";
+        $done=or_query($query);
+        if ($done)
+            $reconfirmations_sent++;
+    }
+    return $reconfirmations_sent;
+}
+
 function experimentmail__send_invitations_to_queue($experiment_id,$whom="not-invited") {
     switch ($whom) {
         case "not-invited":     $aquery=" AND invited=0 "; break;
@@ -311,7 +324,7 @@ function experimentmail__send_mails_from_queue($number=0,$type="",$experiment_id
     } else $squery="";
 
     $smails=array(); $smails_ids=array();
-    $invitations=array(); $reminders=array(); $bulks=array(); $warnings=array();
+    $invitations=array(); $reminders=array(); $bulks=array(); $warnings=array(); $reconfirmations=array();
     $errors=array();
     $reminder_text=array(); $warning_text=array(); $inv_texts=array();
     $exps=array(); $sesss=array(); $parts=array(); $labs=array();
@@ -367,6 +380,10 @@ function experimentmail__send_mails_from_queue($number=0,$type="",$experiment_id
         }
         if (($ttype=="session_reminder" || $ttype=="noshow_warning") && !isset($labs[$tsess][$tlang])) {
             $labs[$tsess][$tlang]=laboratories__get_laboratory_text($sesss[$tsess]['laboratory_id'],$tlang);
+        }
+
+        if (($ttype=="reconfirmation") && $tpart){
+            $reconfirmations[]=array('participant'=>$parts[$tpart], 'mail'=>$line);
         }
 
 
@@ -501,6 +518,21 @@ function experimentmail__send_mails_from_queue($number=0,$type="",$experiment_id
         }
     }
     $done=experimentmail__gc_bulk_mail_texts();
+
+    //reconfirmations
+    foreach($reconfirmations as $pendingParticipant){
+        error_log('Token generado:'.$pendingParticipant['participant']['confirmation_token'],0);
+        $done=experimentmail__confirmation_mail($pendingParticipant['participant']);
+        if ($done){
+            $mails_sent++;
+            experimentmail__delete_from_queue($pendingParticipant['mail']['mail_id']);
+        }
+        else{
+            $pendingParticipant['mail']['error']='sending';
+            $errors[]=$pendingParticipant['mail'];
+        }
+    }
+
 
     // handle errors
     $pars=array(); $mails_errors=count($errors);
@@ -703,6 +735,8 @@ function experimentmail__send_bulk_mail($mail,$part,$bulk_mail,$footer) {
         $message=process_mail_template($mailtext,$part)."\n".process_mail_template($footer,$part);
         $sender=$settings['support_mail'];
         $headers="From: ".$sender."\r\n";
+        error_log('Asunto: '.$subject,0);
+        error_log('Mensaje: '.$message,0);
         $done=experimentmail__mail($recipient,$subject,$message,$headers);
         return $done;
 }

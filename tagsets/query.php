@@ -366,8 +366,8 @@ function query_show_query_result($query_arr,$type="participants_search_active",$
 
     $shade=false; $assign_ids=array();
     while ($p=pdo_fetch_assoc($result)) {
-        if ($type=='participants_unconfirmed') $assign_ids[]=$p['email'];
-        else $assign_ids[]=$p['participant_id'];
+        /*if ($type=='participants_unconfirmed') $assign_ids[]=$p['email'];
+        else */$assign_ids[]=$p['participant_id']; //getting the ids for sending a bulk mail
         echo '<tr class="small"';
             if ($shade) echo ' bgcolor="'.$color['list_shade1'].'"';
             else echo 'bgcolor="'.$color['list_shade2'].'"';
