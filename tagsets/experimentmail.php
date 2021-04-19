@@ -521,7 +521,6 @@ function experimentmail__send_mails_from_queue($number=0,$type="",$experiment_id
 
     //reconfirmations
     foreach($reconfirmations as $pendingParticipant){
-        error_log('Token generado:'.$pendingParticipant['participant']['confirmation_token'],0);
         $done=experimentmail__confirmation_mail($pendingParticipant['participant']);
         if ($done){
             $mails_sent++;
@@ -844,7 +843,8 @@ function experimentmail__confirmation_mail($participant) {
     global $authdata, $lang, $settings__root_url, $settings;
     $message=experimentmail__get_confirmation_mail_text($participant);
     $headers="From: ".$settings['support_mail']."\r\n";
-    experimentmail__mail($participant['email'],lang('registration_email_subject'),$message,$headers);
+    $done=experimentmail__mail($participant['email'],lang('registration_email_subject'),$message,$headers);
+    return $done;
 }
 
 function experimentmail__get_confirmation_mail_text($participant) {
