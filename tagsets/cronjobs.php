@@ -437,14 +437,43 @@ function cron__check_for_participant_exclusion() {
                 AND number_noshowup >= '".$settings['automatic_exclusion_noshows']."'";
         $result=or_query($query);
 
+        //code for the first no showup warning to participants
+        $queryFirstNoShowup="SELECT * FROM ".table('participants')."
+                WHERE ".$status_query."
+                AND number_noshow_warnings=0 and number_noshowup=1";
+        $resultFirst=or_query($queryFirstNoShowup);
+
+        //code for the second no showup warning to participants
+        $querySecondNoShowup="SELECT * FROM ".table('participants')."
+            WHERE ".$status_query."
+            AND number_noshow_warnings<=1 and number_noshowup=2";
+        $resultSecond=or_query($querySecondNoShowup);
+
         $excluded=0; $informed=0;
         while ($line=pdo_fetch_assoc($result)) {
             $done=participant__exclude_participant($line);
             if ($done=='informed') $informed++;
             $excluded++;
         }
+
+        $firstwarned=0;
+        while ($line=pdo_fetch_assoc($resultFirst)){
+            $done=participant__first_noshowup_warning($line);
+            if ($done=='informed')
+                $firstwarned++;
+        }
+
+        $secondwarned=0;
+        while ($line=pdo_fetch_assoc($resultSecond)){
+            $done=participant__second_noshowup_warning($line);
+            if ($done=='informed')
+                $secondwarned++;
+        }
+
         if ($excluded>0) $mess.="participants excluded: ".$excluded;
         if ($informed>0) $mess.="\nparticipants informed: ".$informed;
+        if ($firstwarned>0) $mess."\nparticipants first warning informed: ".$firstwarned;
+        if ($secondwarned>0) $mess."\nparticipants second warning informed: ".$secondwarned;
     }
     return $mess;
 }

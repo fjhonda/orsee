@@ -657,6 +657,31 @@ function experimentmail__send_participant_exclusion_mail($part) {
     return $done;
 }
 
+
+function experimentmail__warn_first_noshowup($part){
+    global $settings;
+    $mailtext=stripslashes(load_mail("first_noshowup_warning",$part['language']));
+    $subject=load_language_symbol('first_noshowup_warning_subject',$part['language']);
+    $recipient=$part['email'];
+    $message=process_mail_template($mailtext,$part);
+    $sender=$settings['support_mail'];
+    $headers="From: ".$sender."\r\n";
+    $done=experimentmail__mail($recipient,$subject,$message,$headers);
+    return $done;
+}
+
+function experimentmail__warn_second_noshowup($part){
+    global $settings;
+    $mailtext=stripslashes(load_mail("second_noshowup_warning",$part['language']));
+    $subject=load_language_symbol('second_noshowup_warning_subject',$part['language']);
+    $recipient=$part['email'];
+    $message=process_mail_template($mailtext,$part);
+    $sender=$settings['support_mail'];
+    $headers="From: ".$sender."\r\n";
+    $done=experimentmail__mail($recipient,$subject,$message,$headers);
+    return $done;
+}
+
 function experimentmail__send_reminder_notice($line,$number,$sent,$disclaimer="") {
     global $settings;
     $experimenters=db_string_to_id_array($line['experimenter_mail']);

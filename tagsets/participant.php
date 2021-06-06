@@ -46,6 +46,46 @@ function participant__exclude_participant($participant) {
     return $result;
 }
 
+function participant__first_noshowup_warning($participant){
+    global $settings, $lang;
+    if (lang('lang')) $notice=lang('automatic_first_noshowup_warning');
+    else $notice=load_language_symbol('automatic_first_noshowup_warning',$settings['admin_standard_language']);
+    $remarks=$participant['remarks']."\n".$notice.' '.$participant['number_noshowup'];
+    $pars=array(':remarks'=>$remarks,
+                ':participant_id'=>$participant['participant_id'],
+                ':count_warnings'=> 1);
+
+    $query="UPDATE ".table('participants')."
+            SET remarks=:remarks,
+            number_noshow_warnings=:count_warnings
+            WHERE participant_id=:participant_id";
+    $done=or_query($query,$pars);
+    $result='excluded';
+    $done=experimentmail__warn_first_noshowup($participant);
+    $result='informed';
+    return $result;
+}
+
+function participant__second_noshowup_warning($participant){
+    global $settings, $lang;
+    if (lang('lang')) $notice=lang('automatic_second_noshowup_warning');
+    else $notice=load_language_symbol('automatic_second_noshowup_warning',$settings['admin_standard_language']);
+    $remarks=$participant['remarks']."\n".$notice.' '.$participant['number_noshowup'];
+    $pars=array(':remarks'=>$remarks,
+                ':participant_id'=>$participant['participant_id'],
+                ':count_warnings'=> 2);
+
+    $query="UPDATE ".table('participants')."
+            SET remarks=:remarks,
+            number_noshow_warnings=:count_warnings
+            WHERE participant_id=:participant_id";
+    $done=or_query($query,$pars);
+    $result='excluded';
+    $done=experimentmail__warn_second_noshowup($participant);
+    $result='informed';
+    return $result;
+}
+
 function participants__get_statistics($participant_id) {
     global $lang, $color;
     echo '<TABLE style="width: 90%">
