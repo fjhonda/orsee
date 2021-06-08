@@ -424,19 +424,10 @@ function cron__check_for_noshow_warnings() {
         }
         $done2=experimentmail__set_noshow_warnings_checked($line['session_id']);
     }
-    return $mess;
-}
 
-function cron__check_for_participant_exclusion() {
-    global $settings;
-    $mess="";
-    if ($settings['automatic_exclusion']=='y') {
+    //code for first and second no show up warnings
+    if ($settings['send_noshow_warnings']=='y'){
         $status_query=participant_status__get_pquery_snippet("eligible_for_experiments");
-        $query="SELECT * FROM ".table('participants')."
-                WHERE ".$status_query."
-                AND number_noshowup >= '".$settings['automatic_exclusion_noshows']."'";
-        $result=or_query($query);
-
         //code for the first no showup warning to participants
         $queryFirstNoShowup="SELECT * FROM ".table('participants')."
                 WHERE ".$status_query."
@@ -448,13 +439,6 @@ function cron__check_for_participant_exclusion() {
             WHERE ".$status_query."
             AND number_noshow_warnings<=1 and number_noshowup=2";
         $resultSecond=or_query($querySecondNoShowup);
-
-        $excluded=0; $informed=0;
-        while ($line=pdo_fetch_assoc($result)) {
-            $done=participant__exclude_participant($line);
-            if ($done=='informed') $informed++;
-            $excluded++;
-        }
 
         $firstwarned=0;
         while ($line=pdo_fetch_assoc($resultFirst)){
@@ -470,11 +454,35 @@ function cron__check_for_participant_exclusion() {
                 $secondwarned++;
         }
 
-        if ($excluded>0) $mess.="participants excluded: ".$excluded;
-        if ($informed>0) $mess.="\nparticipants informed: ".$informed;
         if ($firstwarned>0) $mess."\nparticipants first warning informed: ".$firstwarned;
         if ($secondwarned>0) $mess."\nparticipants second warning informed: ".$secondwarned;
     }
+
+    return $mess;
+}
+
+function cron__check_for_participant_exclusion() {
+    global $settings;
+    $mess="";
+
+    if ($settings['automatic_exclusion']=='y') {
+        $status_query=participant_status__get_pquery_snippet("eligible_for_experiments");
+        $query="SELECT * FROM ".table('participants')."
+                WHERE ".$status_query."
+                AND number_noshowup >= '".$settings['automatic_exclusion_noshows']."'";
+        $result=or_query($query);
+
+        $excluded=0; $informed=0;
+        while ($line=pdo_fetch_assoc($result)) {
+            $done=participant__exclude_participant($line);
+            if ($done=='informed') $informed++;
+            $excluded++;
+        }
+
+        if ($excluded>0) $mess.="participants excluded: ".$excluded;
+        if ($informed>0) $mess.="\nparticipants informed: ".$informed;
+    }
+
     return $mess;
 }
 
